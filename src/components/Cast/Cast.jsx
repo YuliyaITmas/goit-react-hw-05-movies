@@ -77,7 +77,7 @@ if (cast.length === 0) {
                 alt={actor.name}
               />
               <CastName>{actor.name}</CastName>
-              <CastCharacter>Character: {actor.character}</CastCharacter>
+             { `${actor.character}` && <CastCharacter>Character: {actor.character}</CastCharacter>}
             </CastItem>
           ))}
         </CastList>
