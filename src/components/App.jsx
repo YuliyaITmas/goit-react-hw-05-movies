@@ -5,6 +5,7 @@ import { Routes, Route } from 'react-router-dom';
 // import Reviews from './Reviews/Reviews';
 import Layout from './Layout';
 import { lazy } from 'react';
+import NotFound from 'pages/NotFound';
 
 
 const Home = lazy(() => import('../pages/Home'))
@@ -28,7 +29,7 @@ export const App = () => {
         </Route>
       </Route>
 
-      <Route path="*" element={<div> Not Found</div>} />
+      <Route path="*" element={<NotFound/>} />
     </Routes>
   );
 };

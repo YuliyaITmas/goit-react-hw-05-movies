@@ -40,7 +40,7 @@ const Movies = () => {
   const [totalPages, setTotalPages] = useState(0);
   const [status, setStatus] = useState(Status.IDLE);
   const [error, setError] = useState(null);
-  const [isSearchExecuted, setIsSearchExecuted] = useState(false);
+  
   const location = useLocation();
 
   const handleSearch = value => {
@@ -51,25 +51,29 @@ const Movies = () => {
   };
 
   const searchMoviesAPI = async () => {
-    try {
-      const response = await movieAPI.searchMovies(movie, page);
-      setIsSearchExecuted(true);
-      setStatus(Status.PENDING);
+    if (!searchParams) return
+      try {
+        const response = await movieAPI.searchMovies(movie, page);
+    
+        setStatus(Status.PENDING);
 
-      if (response.results.length === 0 && movie) {
-        setStatus(Status.RESOLVED);
-        Notify.warning(`No movies found.`, options);
-        setMovies([]); // Сброс результатов поиска
-        setTotalPages(0);
-      } else {
-        setMovies(response.results);
-        setTotalPages(response.total_pages);
-        setStatus(Status.RESOLVED);
+        if (response.results.length === 0 && movie) {
+          setStatus(Status.RESOLVED);
+          Notify.warning(`No movies found.`, options);
+          setMovies([]); 
+          setTotalPages(0);
+          setSearchParams({});
+          
+
+        } else {
+          setMovies(response.results);
+          setTotalPages(response.total_pages);
+          setStatus(Status.RESOLVED);
+        }
+      } catch (error) {
+        setStatus(Status.REJECTED);
+        setError(error);
       }
-    } catch (error) {
-      setStatus(Status.REJECTED);
-      setError(error);
-    }
   };
 
   useEffect(() => {
@@ -90,7 +94,9 @@ const Movies = () => {
       setSearchParams({ movie, page: page - 1 });
     }
   };
-
+ if (status === Status.PENDING) {
+   return <Loader />;
+ }
   if (status === Status.REJECTED) {
     return <ErrorMessage  message={error.message} />;
   }
@@ -99,7 +105,7 @@ const Movies = () => {
     <>
       <SearchForm onSubmit={handleSearch} />
       <div>
-        {status === Status.PENDING && isSearchExecuted && <Loader />}
+        {/* {status === Status.PENDING  && <Loader />} */}
         {status === Status.RESOLVED && showPagination && (
           <>
             <MoviesList>

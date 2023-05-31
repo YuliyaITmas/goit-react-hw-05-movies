@@ -18,7 +18,7 @@ const SearchForm = ({ onSubmit }) => {
       return;
     }
     onSubmit(searchValue.trim());
-    
+    setSearchValue('');
  
   };
 
